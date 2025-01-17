@@ -23,33 +23,32 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /app
 
-# Copy project files
-COPY . /app/
+# Copy composer files first for better caching
+COPY composer.json composer.lock ./
 
-# Create necessary directories
-RUN mkdir -p /app/var /app/public \
-    && mkdir -p /var/log/nginx \
-    && mkdir -p /var/cache/nginx
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# Set permissions
-RUN chown -R www-data:www-data /app \
-    && chmod -R 755 /app/public \
+# Copy the rest of the application
+COPY . .
+
+# Create necessary directories and set permissions
+RUN mkdir -p /var/log/nginx /var/cache/nginx /app/var /app/var/cache /app/var/log \
+    && chown -R www-data:www-data /app \
     && chmod -R 777 /app/var \
     && chown -R www-data:www-data /var/log/nginx \
     && chown -R www-data:www-data /var/cache/nginx
 
-# Install dependencies
-RUN composer install --no-dev --optimize-autoloader
-
 # Set environment variables
 ENV APP_ENV=prod
 ENV APP_DEBUG=0
+ENV PORT=80
 
 # Copy Nginx configuration
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 
-# Expose port
-EXPOSE 80
+# Expose port (Railway uses PORT env variable)
+EXPOSE ${PORT}
 
 # Start Nginx & PHP-FPM
-CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
+CMD sed -i "s/80/${PORT}/g" /etc/nginx/nginx.conf && php-fpm -D && nginx -g 'daemon off;'
