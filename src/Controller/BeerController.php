@@ -63,7 +63,7 @@ class BeerController extends AbstractController
         ]);
     }
 
-    #[Route('/beer/{id}/edit', name: 'app_beer_edit')]
+    #[Route('/beer/{id}/edit', name: 'app_beer_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, int $id): Response
     {
         // Récupérer la bière
@@ -73,29 +73,16 @@ class BeerController extends AbstractController
         );
 
         $beer = $response->toArray();
-        
-        // Créer le formulaire
-        $form = $this->createForm(BeerType::class, $beer);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $formData = $form->getData();
-            
-            // Debug: Afficher les données du formulaire
-            dump('Données du formulaire:', $formData);
-            
-            // Préparer uniquement les données modifiées
+        // Si c'est une requête POST, traiter la modification
+        if ($request->isMethod('POST')) {
             $updatedData = [
-                'beer' => $formData['beer'],
-                'price' => (float) $formData['price'],
-                'imageUrl' => $formData['imageUrl'],
-                'brewery_id' => (int) $formData['brewery_id']
+                'beer' => $request->request->get('beer'),
+                'price' => (float) $request->request->get('price'),
+                'brewery_id' => (int) $request->request->get('brewery_id'),
+                'imageUrl' => $request->request->get('imageUrl')
             ];
-            
-            // Debug: Afficher les données envoyées à l'API
-            dump('Données envoyées à l\'API:', $updatedData);
-            
-            // Mettre à jour via l'API avec PATCH
+
             try {
                 $response = $this->httpClient->request(
                     'PATCH',
@@ -108,28 +95,17 @@ class BeerController extends AbstractController
                     ]
                 );
 
-                // Debug: Afficher la réponse de l'API
-                $responseContent = $response->getContent();
-                dump('Réponse de l\'API:', $responseContent);
-
-                $statusCode = $response->getStatusCode();
-                dump('Code de statut:', $statusCode);
-
-                if ($statusCode === 200) {
+                if ($response->getStatusCode() === 200) {
                     $this->addFlash('success', 'La bière a été mise à jour avec succès.');
                     return $this->redirectToRoute('app_beer_show', ['id' => $id]);
-                } else {
-                    $this->addFlash('error', 'Erreur lors de la mise à jour : code ' . $statusCode);
                 }
             } catch (\Exception $e) {
-                dump('Erreur:', $e->getMessage());
                 $this->addFlash('error', 'Erreur lors de la mise à jour : ' . $e->getMessage());
             }
         }
 
         return $this->render('beer/edit.html.twig', [
-            'beer' => $beer,
-            'form' => $form->createView()
+            'beer' => $beer
         ]);
     }
 
