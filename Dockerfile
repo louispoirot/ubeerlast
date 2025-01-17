@@ -26,11 +26,22 @@ WORKDIR /app
 # Copy project files
 COPY . /app/
 
-# Create necessary directories
-RUN mkdir -p /var/log/nginx && mkdir -p /var/cache/nginx
+# Set permissions
+RUN chown -R www-data:www-data /app \
+    && chmod -R 755 /app/public \
+    && chmod -R 777 /app/var
+
+# Create necessary directories with proper permissions
+RUN mkdir -p /var/log/nginx && mkdir -p /var/cache/nginx \
+    && chown -R www-data:www-data /var/log/nginx \
+    && chown -R www-data:www-data /var/cache/nginx
 
 # Install dependencies
-RUN composer install --no-dev --optimize-autoloader --no-scripts
+RUN composer install --no-dev --optimize-autoloader
+
+# Set environment variables
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
 
 # Copy Nginx configuration
 COPY docker/nginx.conf /etc/nginx/nginx.conf
