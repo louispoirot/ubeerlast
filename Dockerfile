@@ -26,13 +26,15 @@ WORKDIR /app
 # Copy project files
 COPY . /app/
 
+# Create necessary directories
+RUN mkdir -p /app/var /app/public \
+    && mkdir -p /var/log/nginx \
+    && mkdir -p /var/cache/nginx
+
 # Set permissions
 RUN chown -R www-data:www-data /app \
     && chmod -R 755 /app/public \
-    && chmod -R 777 /app/var
-
-# Create necessary directories with proper permissions
-RUN mkdir -p /var/log/nginx && mkdir -p /var/cache/nginx \
+    && chmod -R 777 /app/var \
     && chown -R www-data:www-data /var/log/nginx \
     && chown -R www-data:www-data /var/cache/nginx
 
