@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Mon Compte</h1>
+                <p>Bienvenue {{ app.user.firstname }} {{ app.user.lastname }}</p>
+                <p>Email : {{ app.user.email }}</p>
+                <a href="{{ path('app_account_modify_pwd') }}" class="btn btn-primary mb-2">Modifier mon mot de passe</a>
+                <br>
+                <a href="{{ path('app_logout') }}" class="btn btn-danger">Se déconnecter</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

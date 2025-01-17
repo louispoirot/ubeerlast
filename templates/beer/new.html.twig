@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="mb-0">Ajouter une nouvelle bière</h2>
+                        </div>
+                        <div class="card-body">
+                            {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+                            
+                            <div class="mb-3">
+                                {{ form_label(form.brewery_id, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.brewery_id, {'attr': {'class': 'form-select'}}) }}
+                                {{ form_errors(form.brewery_id) }}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(form.beer, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.beer, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.beer) }}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(form.price, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.price) }}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form_label(form.imageUrl, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.imageUrl, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.imageUrl) }}
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <a href="{{ path('app_home') }}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle me-2"></i>Annuler
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle me-2"></i>Ajouter
+                                </button>
+                            </div>
+
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

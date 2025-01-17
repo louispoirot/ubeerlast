@@ -1,17 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
-
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="UBeer - Votre service de livraison de bières artisanales" />
+        <meta name="author" content="UBeer" />
+        <title>UBeer - Livraison de bières artisanales</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{{ asset('assets/favicon.ico') }}" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{{ asset('assets/css/styles.css') }}" rel="stylesheet" />
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#!">UBeer</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Accueil</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#nos-bieres">Nos Bières</a></li>
+                    </ul>
+                    <form class="d-flex align-items-center">
+                        {% if app.user %}
+                            <a href="{{ path('app_account') }}" class="btn btn-outline-light me-2">
+                                <i class="bi-person-fill me-1"></i>
+                                {{ app.user.firstname }}
+                            </a>
+                        {% else %}
+                            <a href="{{ path('app_login') }}" class="btn btn-outline-light me-2">
+                                <i class="bi-person-fill me-1"></i>
+                                Connexion
+                            </a>
+                        {% endif %}
+                        <button class="btn btn-outline-light" type="submit">
+                            <i class="bi-cart-fill me-1"></i>
+                            Panier
+                            <span class="badge bg-light text-dark ms-1 rounded-pill">0</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+        <!-- Header-->
+        <header class="bg-dark py-3">
+            <div class="container px-4 px-lg-5 my-3">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">UBeer - La bière à votre porte</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Découvrez notre sélection de bières artisanales</p>
+                </div>
+            </div>
+        </header>
+
+{% block body %}{% endblock %}
+
+        <!-- Footer-->
+        <footer class="py-3 bg-dark">
+            <div class="container">
+                <p class="m-0 text-center text-white">Copyright &copy; UBeer 2025</p>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{{ asset('assets/js/scripts.js') }}"></script>
     </body>
 </html>
